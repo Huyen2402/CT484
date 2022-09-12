@@ -69,7 +69,7 @@ flutter:
       fonts:
         - asset: assets/fonts/Anton-Regular.ttf
   assets:
-    - assets/
+    - assets/goods_00_434247.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
