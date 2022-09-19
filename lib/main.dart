@@ -24,11 +24,7 @@ class MyApp extends StatelessWidget {
         ),
         
       ),
-      home: const SafeArea(
-        child: OrdersScreen(
-         
-        ),
-        ),
+      home: const ProductOverviewScreen(),
       routes: {
         CartScreen.routeName:(context) => const CartScreen(),
         OrdersScreen.routeName:(context) => const OrdersScreen(),
