@@ -22,6 +22,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (cyx) => CartManager(),
           
+        ),
+        ChangeNotifierProvider(
+          create: (cyx) => OderManager(),
+          
         )
       ],
      child: MaterialApp(
