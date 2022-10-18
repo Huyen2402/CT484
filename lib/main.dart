@@ -17,50 +17,47 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (cyx) => ProductManager(),
-          
         ),
         ChangeNotifierProvider(
           create: (cyx) => CartManager(),
-          
         ),
         ChangeNotifierProvider(
           create: (cyx) => OderManager(),
-          
         )
       ],
-     child: MaterialApp(
-      title: 'My Shop',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Lato',
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.purple,
-        ).copyWith(
-          secondary: Colors.deepOrange,
+      child: MaterialApp(
+        title: 'My Shop',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Lato',
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.purple,
+          ).copyWith(
+            secondary: Colors.deepOrange,
+          ),
         ),
-        
+        home: const ProductOverviewScreen(),
+        routes: {
+          CartScreen.routeName: (context) => const CartScreen(),
+          OrdersScreen.routeName: (context) => const OrdersScreen(),
+          UserProductScreen.routeName: (context) => const UserProductScreen()
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == EditProductScreen.routeName) {
+            final productId = settings.arguments as String?;
+            return MaterialPageRoute(
+              builder: (ctx) {
+                return EditProductScreen(
+                  productId != null
+                      ? ctx.read<ProductManager>().findById(productId)
+                      : null,
+                );
+              },
+            );
+          }
+          return null;
+        },
       ),
-      home: const ProductOverviewScreen(),
-      routes: {
-        CartScreen.routeName:(context) => const CartScreen(),
-        OrdersScreen.routeName:(context) => const OrdersScreen(),
-        UserProductScreen.routeName:(context) => const UserProductScreen()
-      },
-      onGenerateRoute: (settings) {
-        if(settings.name == ProductDetailScreen.routeName){
-          final productId = settings.arguments as String;
-          return MaterialPageRoute(
-            builder: (context) {
-              return ProductDetailScreen(
-                context.read<ProductManager>().findById(productId)
-              );
-            },
-          );
-        }
-        return null;
-      },
-    ),
-      );
-   
+    );
   }
 }

@@ -19,7 +19,7 @@ class ProductGirdTitle extends StatelessWidget {
             Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
                 arguments: product.id);
           },
-          child: Image.asset(
+          child: Image.network(
             product.imageUrl,
             fit: BoxFit.cover,
           ),

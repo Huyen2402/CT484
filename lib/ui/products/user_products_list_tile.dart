@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop/ui/products/edit_product_screen.dart';
 import 'package:provider/provider.dart';
 import '../../model/product.dart';
 import 'products_manager.dart';
@@ -12,7 +13,7 @@ class UserProductListTile extends StatelessWidget {
     return ListTile(
       title: Text(product.title),
       leading: CircleAvatar(
-        backgroundImage: AssetImage(product.imageUrl),
+        backgroundImage: NetworkImage(product.imageUrl),
       ),
       trailing: SizedBox(
         width: 100,
@@ -30,7 +31,10 @@ class UserProductListTile extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.edit),
       onPressed: () {
-        print('Go to edit product screen');
+        Navigator.of(context).pushNamed(
+          EditProductScreen.routeName,
+          arguments: product.id,
+        );
       },
       color: Theme.of(context).primaryColor,
     );
