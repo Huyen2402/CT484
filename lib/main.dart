@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'ui/screens.dart';
 
@@ -12,7 +13,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (cyx) => ProductManager(),
+          
+        )
+      ],
+     child: MaterialApp(
       title: 'My Shop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -35,13 +43,16 @@ class MyApp extends StatelessWidget {
           final productId = settings.arguments as String;
           return MaterialPageRoute(
             builder: (context) {
-              return ProductDetailScreen(ProductManager().findById(productId),
+              return ProductDetailScreen(
+                context.read<ProductManager>().findById(productId)
               );
             },
           );
         }
         return null;
       },
-    );
+    ),
+      );
+   
   }
 }
