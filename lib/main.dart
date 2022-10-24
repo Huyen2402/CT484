@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'ui/screens.dart';
 
-void main() {
+Future<void>  main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -16,6 +18,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (cyx) => AuthManager(),
+        ),
+        ChangeNotifierProvider(
           create: (cyx) => ProductManager(),
         ),
         ChangeNotifierProvider(
@@ -25,38 +30,47 @@ class MyApp extends StatelessWidget {
           create: (cyx) => OderManager(),
         )
       ],
-      child: MaterialApp(
-        title: 'My Shop',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Lato',
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.purple,
-          ).copyWith(
-            secondary: Colors.deepOrange,
-          ),
-        ),
-        home: const ProductOverviewScreen(),
-        routes: {
-          CartScreen.routeName: (context) => const CartScreen(),
-          OrdersScreen.routeName: (context) => const OrdersScreen(),
-          UserProductScreen.routeName: (context) => const UserProductScreen()
-        },
-        onGenerateRoute: (settings) {
-          if (settings.name == EditProductScreen.routeName) {
-            final productId = settings.arguments as String?;
-            return MaterialPageRoute(
-              builder: (ctx) {
-                return EditProductScreen(
-                  productId != null
-                      ? ctx.read<ProductManager>().findById(productId)
-                      : null,
+      child: Consumer<AuthManager>(
+        builder: (context, authManager, child) {
+          return MaterialApp(
+            title: 'My Shop',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: 'Lato',
+              colorScheme: ColorScheme.fromSwatch(
+                primarySwatch: Colors.purple,
+              ).copyWith(
+                secondary: Colors.deepOrange,
+              ),
+            ),
+            home: authManager.isAuth ? const ProductOverviewScreen() : FutureBuilder(
+              future: authManager.tryAutoLogin(),
+              builder: (context, snapshot) {
+                return snapshot.connectionState == ConnectionState.waiting ? const SplashScreen() : const AuthScreen();
+              }),
+            routes: {
+              CartScreen.routeName: (context) => const CartScreen(),
+              OrdersScreen.routeName: (context) => const OrdersScreen(),
+              UserProductScreen.routeName: (context) => const UserProductScreen(),
+              
+            },
+            onGenerateRoute: (settings) {
+              if (settings.name == ProductDetailScreen.routeName) {
+                final productId = settings.arguments as String;
+                return MaterialPageRoute(
+                  builder: (ctx) {
+                    return ProductDetailScreen(
+                     
+                           ctx.read<ProductManager>().findById(productId),
+                          
+                    );
+                  },
                 );
-              },
-            );
-          }
-          return null;
-        },
+              }
+              return null;
+            },
+          );
+        }
       ),
     );
   }
