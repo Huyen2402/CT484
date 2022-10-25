@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:myshop/ui/cart/cart_manager.dart';
 import 'package:myshop/ui/cart/cart_screen.dart';
+import 'package:myshop/ui/products/products_manager.dart';
 import 'package:myshop/ui/share/app_drawer.dart';
 import 'package:provider/provider.dart';
 import 'product_grid.dart';
@@ -17,7 +20,14 @@ class ProductOverviewScreen extends StatefulWidget {
 }
 
 class _ProductOverviewScreen extends State<ProductOverviewScreen> {
-  var _showOnlyFavorite = false;
+  final _showOnlyFavorite = ValueNotifier<bool>(false);
+  late Future<void> _fetchProducts;
+
+  @override
+  void initState(){
+    super.initState();
+    _fetchProducts = context.read<ProductManager>().fetchProduct();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +40,20 @@ class _ProductOverviewScreen extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductGrid(_showOnlyFavorite),
+      body: FutureBuilder(
+        future: _fetchProducts,
+        builder: ((context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.done){
+            return ValueListenableBuilder<bool>(valueListenable: _showOnlyFavorite, 
+            builder: (context, value, child) {
+              return ProductGrid(value);
+            });
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }),
+      ),
     );
   }
 
@@ -51,14 +74,11 @@ class _ProductOverviewScreen extends State<ProductOverviewScreen> {
   Widget buildProductFilterMenu(){
     return PopupMenuButton(
       onSelected: (FilterOptions selectedValue){
-        setState(() {
-          if(selectedValue == FilterOptions.favorites){
-            _showOnlyFavorite = true;
-
-          }else{
-            _showOnlyFavorite = false;
-          }
-        });
+     if(selectedValue == FilterOptions.favorites){
+      _showOnlyFavorite.value =true;
+     } else{
+      _showOnlyFavorite.value = false;
+     }
       },
       icon: const Icon(
         Icons.more_vert,
