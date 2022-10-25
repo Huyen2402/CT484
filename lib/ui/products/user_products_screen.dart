@@ -3,7 +3,7 @@ import 'package:myshop/ui/screens.dart';
 import 'package:myshop/ui/share/app_drawer.dart';
 import 'package:provider/provider.dart';
 import 'user_products_list_tile.dart';
-import 'products_manager.dart';
+
 
 class UserProductScreen extends StatelessWidget {
   static const routeName = '/user-product';

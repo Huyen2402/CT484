@@ -40,7 +40,7 @@ class ProductGirdTitle extends StatelessWidget {
             ),
             color: Theme.of(context).colorScheme.secondary,
             onPressed: () {
-              product.isFavorite = !isFavorite;
+            ctx.read<ProductManager>().toggleFavoriteStatus(product);
             },
           );
         },
