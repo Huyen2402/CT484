@@ -7,6 +7,9 @@ import 'products_manager.dart';
 class UserProductListTile extends StatelessWidget {
   final Product product;
   const UserProductListTile(this.product, {super.key});
+  
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -61,11 +61,11 @@ class MyApp extends StatelessWidget {
               
             },
             onGenerateRoute: (settings) {
-              if (settings.name == ProductDetailScreen.routeName) {
+              if (settings.name == EditProductScreen.routeName) {
                 final productId = settings.arguments as String;
                 return MaterialPageRoute(
                   builder: (ctx) {
-                    return ProductDetailScreen(
+                    return EditProductScreen(
                      
                            ctx.read<ProductManager>().findById(productId),
                           
@@ -75,6 +75,11 @@ class MyApp extends StatelessWidget {
               }
               return null;
             },
+            
+
+
+
+            
           );
         }
       ),
